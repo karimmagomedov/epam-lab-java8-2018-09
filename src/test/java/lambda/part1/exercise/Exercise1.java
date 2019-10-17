@@ -1,5 +1,6 @@
 package lambda.part1.exercise;
 
+import java.util.Comparator;
 import lambda.data.Person;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +18,7 @@ class Exercise1 {
         Person[] persons = getPersons();
 
         // TODO use Arrays.sort
+        Arrays.sort(persons, Comparator.comparing(Person::getAge));
 
         assertThat(persons, is(arrayContaining(
                 new Person("Иван", "Мельников", 20),
