@@ -40,7 +40,9 @@ class Exercise2 {
          * @param mapping Функция преобразования элементов.
          */
         public <R> MapHelper<R> map(Function<T, R> mapping) {
-            throw new UnsupportedOperationException();
+            List<R> list = new ArrayList<>();
+            source.forEach(e -> list.add(mapping.apply(e)));
+            return from(list);
         }
 
         /**
@@ -50,7 +52,9 @@ class Exercise2 {
          * @param flatMapping Функция преобразования элементов.
          */
         public <R> MapHelper<R> flatMap(Function<T, List<R>> flatMapping) {
-            throw new UnsupportedOperationException();
+            List<R> list = new ArrayList<>();
+            source.forEach(e -> list.addAll(flatMapping.apply(e)));
+            return from(list);
         }
     }
 
@@ -58,12 +62,13 @@ class Exercise2 {
     void mapEmployeesToLengthOfTheirFullNamesUsingMapHelper() {
         List<Employee> employees = getEmployees();
 
-        List<Integer> lengths = null;
+        List<Integer> lengths = new ArrayList<>();
         // TODO                 MapHelper.from(employees)
         // TODO                          .map(Employee -> Person)
         // TODO                          .map(Person -> String(full name))
         // TODO                          .map(String -> Integer(length of string))
         // TODO                          .getMapped();
+        lengths.addAll(MapHelper.from(employees).map(Employee::getPerson).map(Person::getFullName).map(String::length).getMapped());
         assertThat(lengths, contains(14, 19, 14, 15, 14, 16));
     }
 
