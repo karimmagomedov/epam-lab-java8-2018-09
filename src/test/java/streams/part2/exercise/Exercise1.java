@@ -10,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -25,7 +27,16 @@ class Exercise1 {
         List<Employee> employees = getEmployees();
 
         // TODO реализация
-        Long hours = null;
+        Long hours = employees
+                .stream()
+                .map(e -> e.getJobHistory()
+                        .stream()
+                        .filter(j -> j.getEmployer().equalsIgnoreCase("epam"))
+                        .map(JobHistoryEntry::getDuration)
+                        .mapToInt(w -> w)
+                        .sum())
+                .mapToLong(el -> el)
+                .reduce(Long::sum).getAsLong();
 
         assertThat(hours, is(19L));
     }
@@ -35,7 +46,14 @@ class Exercise1 {
         List<Employee> employees = getEmployees();
 
         // TODO реализация
-        Set<Person> workedAsQa = null;
+        Set<Person> workedAsQa = employees
+                .stream()
+                .filter(e -> e.getJobHistory()
+                        .stream()
+                        .anyMatch(f -> f.getPosition().equalsIgnoreCase("qa")))
+                .map(Employee::getPerson)
+                .collect(Collectors.toSet());
+
 
         assertThat(workedAsQa, containsInAnyOrder(
                 employees.get(2).getPerson(),
@@ -49,15 +67,17 @@ class Exercise1 {
         List<Employee> employees = getEmployees();
 
         // TODO реализация
-        String result = null;
+        String result = employees.stream()
+                .map(employee -> employee.getPerson().getFullName())
+                .collect(Collectors.joining("\n"));
 
         assertThat(result, is(
                 "Иван Мельников\n"
-                + "Александр Дементьев\n"
-                + "Дмитрий Осинов\n"
-                + "Анна Светличная\n"
-                + "Игорь Толмачёв\n"
-                + "Иван Александров"));
+                        + "Александр Дементьев\n"
+                        + "Дмитрий Осинов\n"
+                        + "Анна Светличная\n"
+                        + "Игорь Толмачёв\n"
+                        + "Иван Александров"));
     }
 
     @Test
